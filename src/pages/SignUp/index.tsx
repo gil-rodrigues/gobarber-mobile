@@ -24,6 +24,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import getValidationErrors from '../../utils/getValidationErrors';
+import api from '../../services/api';
 
 import logoImg from '../../assets/logo.png';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -41,6 +42,7 @@ const SignUp: React.FC = () => {
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
+
   const handleSignUp = useCallback(async (data: SignUpFormData) => {
     try {
       formRef.current?.setErrors({});
@@ -55,9 +57,11 @@ const SignUp: React.FC = () => {
         abortEarly: false
       });
 
-      // await api.post('/users',data);
+      await api.post('/users',data);
 
-      // history.push('/');
+      Alert.alert('Registo realizado com sucesso!','Já pode fazer log-in')
+
+      navigation.goBack();
 
     } catch (err) {
       if(err instanceof Yup.ValidationError) {
