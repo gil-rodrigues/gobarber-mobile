@@ -1,9 +1,15 @@
-import React, { useState, useEffect, useCallback, useRef, useImperativeHandle, forwardRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useImperativeHandle,
+  forwardRef
+} from 'react';
 import { TextInputProps } from 'react-native';
 import { useField } from '@unform/core';
 
 import { Container, TextInput, Icon } from './styles';
-
 
 interface InputProps extends TextInputProps {
   name: string;
@@ -18,25 +24,28 @@ interface InputRef {
   focus(): void;
 }
 
-const Input: React.RefForwardingComponent<InputRef, InputProps> = ({ name, icon, ...rest }, ref) => {
+const Input: React.RefForwardingComponent<InputRef, InputProps> = (
+  { name, icon, ...rest },
+  ref
+) => {
   const inputValueRef = useRef<InputValueReference>({ value: '' });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const inputElementRef = useRef<any>(null);
 
-  const { registerField, defaultValue = '', fieldName, error } = useField(name)
+  const { registerField, defaultValue = '', fieldName, error } = useField(name);
 
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
 
   const handleInputFocus = useCallback(() => {
     setIsFocused(true);
-  },[])
+  }, []);
 
   const handleInputBlur = useCallback(() => {
     setIsFocused(false);
 
     setIsFilled(!!inputValueRef.current.value);
-  },[])
-
+  }, []);
 
   useImperativeHandle(ref, () => ({
     focus() {
@@ -44,44 +53,42 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = ({ name, icon,
     }
   }));
 
-  useEffect(()=> {
+  useEffect(() => {
     registerField<string>({
       name: fieldName,
       ref: inputValueRef.current,
       path: 'value',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-shadow
       setValue(ref: any, value) {
         inputValueRef.current.value = value;
-        inputElementRef.current.setNativeProps({ text: value })
+        inputElementRef.current.setNativeProps({ text: value });
       },
       clearValue() {
         inputValueRef.current.value = '';
         inputElementRef.current.clear();
       }
-    })
-  },[fieldName, registerField]);
+    });
+  }, [fieldName, registerField]);
 
   return (
-    <Container
-      isErrored={!!error}
-      isFocused={isFocused}
-    >
-
-    <Icon
-      name={icon}
-      size={20}
-      color={isFocused || isFilled ? '#ff9000' : '#666360'}
-    />
-    <TextInput
-      ref={inputElementRef}
-      placeholderTextColor="#666360"
-      defaultValue={defaultValue}
-      onFocus={handleInputFocus}
-      onBlur={handleInputBlur}
-      onChangeText={value => {
-        inputValueRef.current.value = value;
-      }}
-      {...rest}
-    />
+    <Container isErrored={!!error} isFocused={isFocused}>
+      <Icon
+        name={icon}
+        size={20}
+        color={isFocused || isFilled ? '#ff9000' : '#666360'}
+      />
+      <TextInput
+        ref={inputElementRef}
+        placeholderTextColor="#666360"
+        defaultValue={defaultValue}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        onChangeText={value => {
+          inputValueRef.current.value = value;
+        }}
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...rest}
+      />
     </Container>
   );
 };

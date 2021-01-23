@@ -33,6 +33,7 @@
       "react-hooks/exhaustive-deps": "warn",
       "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
       "import/prefer-default-export": "off",
+      "no-unused-expressions": "off",
       "import/extensions": [
         "error",
         "ignorePackages",
@@ -41,12 +42,14 @@
           "tsx": "never"
         }
       ],
-      "prettier/prettier": "error"
-      },
-      "settings": {
-        "import/resolver": {
-          "typescript": {}
-        }
+      "no-use-before-define": "off",
+      "prettier/prettier": "error",
+      "react/prop-types": 0,
+      "camelcase": "off"
+    },
+    "settings": {
+      "import/resolver": {
+        "typescript": {}
       }
+    }
 }
-
